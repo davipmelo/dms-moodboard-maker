@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DM'S MOODBOARD MAKER</title>
+  <meta name="description" content="DM'S MOODBOARD MAKER - Crie moodboards orgânicos e profissionais com suporte a GIFs animados, JPG, PNG e WebP, e exportação em alta resolução para JPG, PDF ou vídeo MP4.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top App Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="brand-section">
+          <div class="brand-icon">
+            <span>DM</span>
+          </div>
+          <div class="brand-title">
+            <span class="brand-name">DM'S MOODBOARD MAKER</span>
+          </div>
+        </div>
+
+        <div class="status-pill" id="statsPill">
+          <span class="status-dot"></span>
+          <span id="statsText">0 imagens • 3 colunas</span>
+        </div>
+      </div>
+
+      <!-- Quick Action Toolbar in Header -->
+      <div class="header-toolbar">
+        <button class="btn btn-secondary" id="btnQuickUrl" title="Colar link de imagem ou GIF">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+          </svg>
+          <span>Colar Link</span>
+        </button>
+
+        <button class="btn btn-secondary" id="btnUploadLocal" title="Carregar imagens do computador">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+          <span>Upload</span>
+        </button>
+        <input type="file" id="fileInputHidden" multiple accept="image/*,video/mp4,video/webm" style="display: none;">
+
+        <button class="btn btn-secondary" id="btnLoadSample" title="Carregar exemplo visual">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/>
+          </svg>
+          <span>Exemplo</span>
+        </button>
+
+        <div class="header-divider"></div>
+
+        <button class="btn btn-ghost btn-icon-only" id="btnUndo" title="Desfazer (Ctrl+Z)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 7v6h6"/>
+            <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/>
+          </svg>
+        </button>
+
+        <button class="btn btn-ghost btn-icon-only" id="btnRedo" title="Refazer (Ctrl+Y)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 7v6h-6"/>
+            <path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7"/>
+          </svg>
+        </button>
+
+        <button class="btn btn-ghost btn-icon-only btn-danger-ghost" id="btnClearBoard" title="Limpar moodboard">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 6h18"/>
+            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="header-right">
+        <!-- Toggle Sidebar Button -->
+        <button class="btn btn-secondary btn-icon-text" id="btnToggleSidebar" title="Ocultar/Exibir Painel de Controles">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
+            <line x1="9" y1="3" x2="9" y2="21"/>
+          </svg>
+          <span id="sidebarToggleLabel">Painel</span>
+        </button>
+
+        <!-- Primary Yellow Export CTA -->
+        <button class="btn btn-primary" id="btnOpenExportModal">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          <span>Exportar</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="app-main">
+      <!-- Left Controls Sidebar (Collapsible) -->
+      <aside class="app-sidebar" id="appSidebar">
+        <div class="sidebar-header">
+          <span class="sidebar-title">CONFIGURAÇÕES</span>
+          <button class="btn-sidebar-close" id="btnCloseSidebar" title="Fechar painel">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <div class="sidebar-scroll">
+          
+          <!-- Section 1: Adicionar Mídia Rápida -->
+          <div class="control-section">
+            <div class="section-title">
+              <span>ADICIONAR MÍDIA</span>
+              <span class="badge-tech">JPG • PNG • WEBP • GIF</span>
+            </div>
+            <div class="control-card">
+              <div class="quick-add-box">
+                <input type="text" id="quickUrlInput" class="text-input" placeholder="Cole link da imagem ou GIF..." autocomplete="off">
+                <button class="btn btn-primary btn-add-icon" id="btnAddUrlBtn" title="Inserir mídia">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                </button>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <button class="btn btn-secondary" id="btnOpenBatchModal" style="flex: 1; font-size: 11px;">
+                  Múltiplos Links
+                </button>
+                <button class="btn btn-secondary" id="btnUploadLocalSidebar" style="flex: 1; font-size: 11px;">
+                  Do Computador
+                </button>
+              </div>
+              <div class="shortcut-tip">
+                <span class="tip-kbd">Ctrl+V</span> Cole imagem ou URL direto na tela
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 2: Grid & Layout -->
+          <div class="control-section">
+            <div class="section-title">
+              <span>LAYOUT & GRID</span>
+            </div>
+            <div class="control-card">
+              <!-- Grid Mode Toggle: Orgânico (Masonry) vs Grade Uniforme -->
+              <div class="control-row">
+                <div class="control-label-wrap">
+                  <span>Tipo de Encaixe</span>
+                </div>
+                <div class="segmented-control" id="gridModeGroup">
+                  <button class="segmented-btn active" data-mode="masonry" title="Encaixe orgânico tipo Pinterest / Ref 2 sem espaços mortos">Orgânico (Masonry)</button>
+                  <button class="segmented-btn" data-mode="uniform" title="Grade com células uniformes">Grade Fixa</button>
+                </div>
+              </div>
+
+              <!-- Columns -->
+              <div class="control-row">
+                <div class="control-label-wrap">
+                  <span>Colunas</span>
+                  <span class="control-value" id="valCols">3</span>
+                </div>
+                <input type="range" class="range-slider" id="sliderCols" min="1" max="8" value="3">
+              </div>
+
+              <!-- Aspect Ratio (Only when in Uniform Grid Mode) -->
+              <div class="control-row" id="aspectControlContainer" style="display: none;">
+                <div class="control-label-wrap">
+                  <span>Proporção das Células</span>
+                </div>
+                <div class="segmented-control" id="aspectRatioGroup" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;">
+                  <button class="segmented-btn active" data-aspect="1/1">1:1</button>
+                  <button class="segmented-btn" data-aspect="4/3">4:3</button>
+                  <button class="segmented-btn" data-aspect="3/4">3:4</button>
+                  <button class="segmented-btn" data-aspect="16/9">16:9</button>
+                  <button class="segmented-btn" data-aspect="9/16">9:16</button>
+                  <button class="segmented-btn" data-aspect="auto">Livre</button>
+                </div>
+              </div>
+
+              <!-- Gap -->
+              <div class="control-row">
+                <div class="control-label-wrap">
+                  <span>Espaçamento (Gap)</span>
+                  <span class="control-value" id="valGap">16 px</span>
+                </div>
+                <input type="range" class="range-slider" id="sliderGap" min="0" max="48" value="16">
+              </div>
+
+              <!-- Padding -->
+              <div class="control-row">
+                <div class="control-label-wrap">
+                  <span>Margem Externa (Padding)</span>
+                  <span class="control-value" id="valPadding">24 px</span>
+                </div>
+                <input type="range" class="range-slider" id="sliderPadding" min="0" max="64" value="24">
+              </div>
+
+              <!-- Border Radius -->
+              <div class="control-row">
+                <div class="control-label-wrap">
+                  <span>Cantos Arredondados</span>
+                  <span class="control-value" id="valRadius">8 px</span>
+                </div>
+                <input type="range" class="range-slider" id="sliderRadius" min="0" max="32" value="8">
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 3: Estilo & Apresentação -->
+          <div class="control-section">
+            <div class="section-title">
+              <span>ESTILO & FUNDO</span>
+            </div>
+            <div class="control-card">
+              <!-- Background Color -->
+              <div class="control-row">
+                <div class="control-label-wrap">
+                  <span>Cor de Fundo do Moodboard</span>
+                  <span class="control-value" id="valBgColor">#0e1014</span>
+                </div>
+                <div class="color-picker-row">
+                  <div class="color-presets" id="bgColorPresets">
+                    <button class="color-swatch-btn active" data-color="#0e1014" style="background: #0e1014;" title="Carbon Black"></button>
+                    <button class="color-swatch-btn" data-color="#000000" style="background: #000000;" title="Pure Black"></button>
+                    <button class="color-swatch-btn" data-color="#181a20" style="background: #181a20;" title="Deep Slate"></button>
+                    <button class="color-swatch-btn" data-color="#242832" style="background: #242832;" title="Studio Gray"></button>
+                    <button class="color-swatch-btn" data-color="#ffbb00" style="background: #ffbb00;" title="Gema Yellow"></button>
+                    <button class="color-swatch-btn" data-color="#ffffff" style="background: #ffffff; border-color: rgba(0,0,0,0.1);" title="Pure White"></button>
+                  </div>
+                  <input type="color" id="nativeColorPicker" class="color-input-native" value="#0e1014" title="Escolher cor personalizada de fundo">
+                </div>
+              </div>
+
+              <!-- Text Color (Title & Subtitle) -->
+              <div class="control-row">
+                <div class="control-label-wrap">
+                  <span>Cor dos Textos (Título e Subtítulo)</span>
+                  <span class="control-value" id="valTextColor">#ffffff</span>
+                </div>
+                <div class="color-picker-row">
+                  <div class="color-presets" id="textColorPresets">
+                    <button class="color-swatch-btn active" data-color="#ffffff" style="background: #ffffff; border-color: rgba(0,0,0,0.1);" title="Pure White"></button>
+                    <button class="color-swatch-btn" data-color="#ffbb00" style="background: #ffbb00;" title="Gema Yellow"></button>
+                    <button class="color-swatch-btn" data-color="#9ca3af" style="background: #9ca3af;" title="Muted Gray"></button>
+                    <button class="color-swatch-btn" data-color="#000000" style="background: #000000;" title="Pure Black"></button>
+                    <button class="color-swatch-btn" data-color="#38bdf8" style="background: #38bdf8;" title="Electric Blue"></button>
+                    <button class="color-swatch-btn" data-color="#f43f5e" style="background: #f43f5e;" title="Rose Red"></button>
+                  </div>
+                  <input type="color" id="nativeTextColorPicker" class="color-input-native" value="#ffffff" title="Escolher cor personalizada para os textos">
+                </div>
+              </div>
+
+              <!-- Moodboard Title -->
+              <div class="control-row">
+                <label class="toggle-row">
+                  <span class="control-label-wrap" style="cursor: pointer;">Exibir Título no Moodboard</span>
+                  <div class="switch">
+                    <input type="checkbox" id="checkShowTitle" checked>
+                    <span class="slider-switch"></span>
+                  </div>
+                </label>
+                <input type="text" id="inputBoardTitle" class="text-input" value="DM'S MOODBOARD // CONCEPT & REFERENCES" placeholder="Título do projeto...">
+                <input type="text" id="inputBoardSubtitle" class="text-input" value="Visual Exploration • Curated Textures & Aesthetics" placeholder="Subtítulo opcional...">
+              </div>
+
+              <!-- Color Palette Strip -->
+              <div class="control-row">
+                <label class="toggle-row">
+                  <span class="control-label-wrap" style="cursor: pointer;">Régua de Paleta de Cores</span>
+                  <div class="switch">
+                    <input type="checkbox" id="checkShowPalette" checked>
+                    <span class="slider-switch"></span>
+                  </div>
+                </label>
+                <button class="btn btn-secondary" id="btnExtractPalette" style="width: 100%; font-size: 11px;">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/>
+                    <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/>
+                    <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/>
+                    <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/>
+                    <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
+                  </svg>
+                  Re-extrair Cores Predominantes
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 4: Guia de Navegação / Controles -->
+          <div class="control-section">
+            <div class="section-title">
+              <span>CONTROLES DE NAVEGAÇÃO</span>
+            </div>
+            <div class="control-card control-shortcuts-card">
+              <div class="shortcut-item">
+                <span class="shortcut-badge">Espaço + Arrastar</span>
+                <span class="shortcut-desc">Pan (Navegar pela tela)</span>
+              </div>
+              <div class="shortcut-item">
+                <span class="shortcut-badge">Scroll do Mouse</span>
+                <span class="shortcut-desc">Zoom In / Zoom Out</span>
+              </div>
+              <div class="shortcut-item">
+                <span class="shortcut-badge">Alt + Scroll</span>
+                <span class="shortcut-desc">Zoom suave centrado</span>
+              </div>
+              <div class="shortcut-item">
+                <span class="shortcut-badge">Ctrl + V</span>
+                <span class="shortcut-desc">Colar imagem ou link</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </aside>
+
+      <!-- Center Canvas Viewport (Infinite Pan & Zoom Workspace) -->
+      <section class="app-viewport" id="appViewport">
+        <!-- Floating Zoom & Fit Bar -->
+        <div class="viewport-floating-bar" id="viewportControls">
+          <button class="btn-viewport-icon" id="btnZoomOut" title="Diminuir Zoom (Scroll para baixo)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+          <span class="zoom-indicator" id="zoomLevelText">100%</span>
+          <button class="btn-viewport-icon" id="btnZoomIn" title="Aumentar Zoom (Scroll para cima)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+          <div class="viewport-divider"></div>
+          <button class="btn-viewport-text" id="btnFitZoom" title="Ajustar moodboard à tela">
+            Ajustar
+          </button>
+          <button class="btn-viewport-text" id="btnResetZoom" title="Voltar a 100%">
+            100%
+          </button>
+        </div>
+
+        <!-- Pan & Zoom Wrapper -->
+        <div class="canvas-pan-container" id="canvasPanContainer">
+          <!-- Moodboard Stage (Target for Export Canvas) -->
+          <div class="moodboard-stage" id="moodboardStage">
+            <div class="moodboard-board" id="moodboardBoard">
+              <!-- Header (Title & Subtitle) -->
+              <div class="moodboard-header" id="boardHeader">
+                <div class="moodboard-title-text" id="displayTitle" contenteditable="true" spellcheck="false">DM'S MOODBOARD // CONCEPT & REFERENCES</div>
+                <div class="moodboard-subtitle-text" id="displaySubtitle" contenteditable="true" spellcheck="false">Visual Exploration • Curated Textures & Aesthetics</div>
+              </div>
+
+              <!-- Organic Masonry / Dynamic Grid Container -->
+              <div class="moodboard-grid" id="moodboardGrid">
+                <!-- Grid / Masonry columns injected dynamically by app.js -->
+              </div>
+
+              <!-- Footer Color Palette Strip -->
+              <div class="moodboard-palette-strip" id="boardPaletteStrip">
+                <!-- Swatches injected dynamically -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Modal: Export Moodboard -->
+    <div class="modal-backdrop" id="exportModal">
+      <div class="modal-card">
+        <div class="modal-header">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div class="modal-icon-badge">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+            </div>
+            <h2 class="modal-title">Exportar Moodboard</h2>
+          </div>
+          <button class="btn btn-ghost btn-icon-only" id="btnCloseExportModal">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <!-- Format Selector Cards -->
+          <div class="control-row">
+            <label class="control-label-wrap">
+              <span>Formato do Arquivo</span>
+            </label>
+            <div class="format-grid" id="exportFormatGrid">
+              <div class="format-card active" data-format="jpg">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
+                  <circle cx="9" cy="9" r="2"/>
+                  <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+                </svg>
+                <span class="format-card-title">JPG</span>
+                <span class="format-card-desc">Imagem Ultra HD</span>
+              </div>
+
+              <div class="format-card" data-format="pdf">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                </svg>
+                <span class="format-card-title">PDF</span>
+                <span class="format-card-desc">Documento Print</span>
+              </div>
+
+              <div class="format-card" data-format="mp4">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+                <span class="format-card-title">MP4</span>
+                <span class="format-card-desc">Vídeo com GIFs</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Magnification Selector -->
+          <div class="control-row">
+            <div class="control-label-wrap">
+              <span>Magnificação / Escala</span>
+              <span class="control-value" id="valExportScale">2x (Recomendado)</span>
+            </div>
+            <div class="segmented-control" id="exportScaleGroup">
+              <button class="segmented-btn" data-scale="1">1x (Tela)</button>
+              <button class="segmented-btn active" data-scale="2">2x (Retina HD)</button>
+              <button class="segmented-btn" data-scale="3">3x (Ultra Print)</button>
+              <button class="segmented-btn" data-scale="4">4x (4K Master)</button>
+            </div>
+          </div>
+
+          <!-- Resolution Preview -->
+          <div class="resolution-preview-card">
+            <div class="res-label">Dimensão Final Calculada:</div>
+            <div class="res-dimensions" id="resPreviewText">2560 × 1440 px</div>
+          </div>
+
+          <!-- Options specific to MP4 -->
+          <div class="control-card hidden" id="mp4OptionsCard">
+            <div class="control-row">
+              <div class="control-label-wrap">
+                <span>Duração do Vídeo</span>
+                <span class="control-value" id="valVideoDuration">5.0 seg</span>
+              </div>
+              <input type="range" class="range-slider" id="sliderVideoDuration" min="2" max="15" step="0.5" value="5">
+            </div>
+
+            <div class="control-row">
+              <div class="control-label-wrap">
+                <span>Taxa de Quadros (FPS)</span>
+              </div>
+              <div class="segmented-control" id="fpsGroup">
+                <button class="segmented-btn" data-fps="24">24 FPS</button>
+                <button class="segmented-btn active" data-fps="30">30 FPS</button>
+                <button class="segmented-btn" data-fps="60">60 FPS</button>
+              </div>
+            </div>
+            <div style="font-size: 11px; color: var(--text-muted);">
+              🎥 O ffmpeg local irá codificar todos os GIFs animados em loop contínuo perfeitamente sincronizado.
+            </div>
+          </div>
+
+          <!-- Progress Bar (Active during generation) -->
+          <div class="progress-container hidden" id="exportProgressContainer">
+            <div class="progress-status-text">
+              <span id="exportStatusMsg">Processando quadros...</span>
+              <span id="exportStatusPercent" class="control-value">0%</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" id="exportProgressBar"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-ghost" id="btnCancelExport">Cancelar</button>
+          <button class="btn btn-primary" id="btnExecuteExport">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            <span id="btnExecuteExportText">Baixar JPG (2x)</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Batch Paste URLs -->
+    <div class="modal-backdrop" id="batchModal">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2 class="modal-title">Colar Múltiplos Links</h2>
+          <button class="btn btn-ghost btn-icon-only" id="btnCloseBatchModal">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p style="font-size: 13px; color: var(--text-secondary);">
+            Cole os links das imagens e GIFs abaixo (um link por linha). Suporta JPG, PNG, WebP, GIF e links de sites como Unsplash, Giphy, etc.
+          </p>
+          <textarea id="batchUrlsTextarea" class="text-input" style="height: 180px; font-family: var(--font-mono); font-size: 12px; resize: vertical;" placeholder="https://exemplo.com/foto1.jpg&#10;https://media.giphy.com/media/.../giphy.gif&#10;https://images.unsplash.com/photo-..."></textarea>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-ghost" id="btnCancelBatchModal">Cancelar</button>
+          <button class="btn btn-primary" id="btnAddBatchUrlsBtn">
+            Adicionar Todos os Links
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Drag & Drop Overlay for full window -->
+    <div class="window-drag-overlay" id="windowDragOverlay">
+      <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="17 8 12 3 7 8"/>
+        <line x1="12" y1="3" x2="12" y2="15"/>
+      </svg>
+      <div class="window-drag-overlay-title">Solte as imagens aqui no moodboard</div>
+    </div>
+
+    <!-- Toast Notifications Container -->
+    <div class="toast-container" id="toastContainer"></div>
+  </div>
+
+  <!-- Vendor Scripts -->
+  <script src="vendor/jspdf.umd.min.js"></script>
+  <script src="vendor/omggif.min.js"></script>
+
+  <!-- Application Logic -->
+  <script src="app.js"></script>
+</body>
+</html>
